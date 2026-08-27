@@ -1,0 +1,277 @@
+@import "tailwindcss";
+@import "./css-reset.css" layer(base);
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-display: var(--font-outfit), "Outfit", system-ui, sans-serif;
+  --font-body: var(--font-outfit), "Outfit", system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+
+  --color-orange: #e79325;
+  --color-orange-600: #c86f17;
+  --color-orange-700: #c86f17;
+  --color-orange-100: #fce8c9;
+  --color-orange-50: #fef6e8;
+
+  --color-blue: #1989ca;
+  --color-blue-700: #00408c;
+  --color-blue-800: #002e66;
+  --color-blue-100: #ccddf1;
+  --color-blue-50: #e5eef8;
+
+  --color-whatsapp: #25d366;
+
+  --color-fg1: #090909;
+  --color-fg2: #3d3d3a;
+  --color-fg3: #5b5b5b;
+  --color-fg4: #9a9a93;
+  --color-fg5: #c2c2b8;
+  --color-surface-2: #f7f7f5;
+  --color-line: #e5e5e0;
+  --color-line-strong: #c9c9c2;
+
+  /* Estude! app palette (resolved from the Figma design) */
+  --color-cream: #faf2e6;
+  --color-cream-card: #eee7dd;
+  --color-cream-panel: #faf2e6;
+  --color-card-surface: #faf7f2;
+  --color-brand-bar: #68482b;
+  --color-brand-bar-foreground: #faf2e6;
+  --color-ink: #090909;
+  --color-amber: #c86f17;
+  --color-amber-hover: #a85e1f;
+  --color-danger: #cf6464;
+  --color-field: #efeeea;
+  --color-field-border: #b3b3b3;
+
+  /* Timer */
+  --color-timer-track: #d9d6cf;
+  --color-timer-arc: #8bcf64;
+  --color-timer-pause: #e2b33b;
+  --color-timer-pause-foreground: #6b4e05;
+  --color-timer-skip: #da5c5c;
+  --color-overtime: #f4b350;
+
+  --background-image-gradient-left: linear-gradient(to right, var(--background), rgba(0, 0, 0, 0));
+  --background-image-gradient-right: linear-gradient(to left, var(--background), rgba(0, 0, 0, 0));
+
+  --radius-brutal: 10px;
+  --shadow-brutal: 2px 4px 0 var(--color-ink);
+  --shadow-brutal-sm: 1px 1px 0 var(--color-ink);
+  --shadow-card: 2px 4px 0 var(--color-ink);
+  --shadow-btn: 1px 1px 0 var(--color-ink);
+  --shadow-ghost: 0.25px 0.75px 0 var(--color-ink);
+  --shadow-fab: 2px 2px 0 var(--color-ink);
+
+  --animate-fade-up: fade-up 0.6s ease-out forwards;
+  --animate-fade-in: fade-in 0.5s ease-out forwards;
+
+  --font-size-lg-heading: 30px;
+  --font-size-heading: 24px;
+  --font-size-subtitle: 18px;
+  --font-size-body: 16px;
+  --font-size-detail: 14px;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@layer base {
+  html {
+    scroll-padding-top: 60px;
+  }
+  :root {
+    color-scheme: light;
+    --background: #faf2e6;
+    --foreground: #090909;
+    --primary: #c86f17;
+    --primary-foreground: #faf2e6;
+    --secondary: #0057bc;
+    --secondary-foreground: #ffffff;
+    --muted: #eee7dd;
+    --muted-foreground: #5b5b5b;
+    --accent: #e5eef8;
+    --accent-foreground: #0057bc;
+    --card: #faf2e6;
+    --card-foreground: #090909;
+    --border: #090909;
+    --ring: rgba(200, 111, 23, 0.28);
+    --bg-warm: #fff8ee;
+  }
+}
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-border, currentColor);
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+  }
+  ::selection {
+    background: var(--color-orange-100);
+    color: var(--color-fg1);
+  }
+}
+
+@utility flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@utility lg-heading {
+  font-size: var(--font-size-lg-heading);
+}
+
+@utility heading {
+  font-size: var(--font-size-heading);
+}
+
+@utility subtitle {
+  font-size: var(--font-size-subtitle);
+}
+
+@utility body {
+  font-size: var(--font-size-body);
+}
+
+@utility detail {
+  font-size: var(--font-size-detail);
+}
+
+/* Neo-brutalist building blocks (1px ink border + hard offset shadow),
+   sized per element to match the Figma design. */
+@utility brutal {
+  border: 1px solid var(--color-ink);
+  box-shadow: var(--shadow-card); /* 2px 4px */
+  border-radius: var(--radius-brutal); /* 10px */
+}
+
+/*!* Small bordered control (icon buttons, filled buttons). *!*/
+/*@utility brutal-sm {*/
+/*  border: 1px solid var(--color-ink);*/
+/*  box-shadow: var(--shadow-btn); !* 1px 1px *!*/
+/*  border-radius: 5px;*/
+/*}*/
+
+@utility brutal-sm {
+  border: 1px solid var(--color-ink);
+  box-shadow: 1px 1px 0; /* 1px 1px */
+  border-radius: 5px;
+}
+
+/* Ghost button: 1px border, whisper-thin offset. Override --ghost color
+   (border + shadow) for the white / gray / colored variants. */
+@utility brutal-ghost {
+  --ghost: var(--color-ink);
+  border: 1px solid var(--ghost);
+  box-shadow: 0.25px 0.75px 0 0 var(--ghost);
+  border-radius: 5px;
+}
+
+/* Flat section container (day cards, topic sections): fill only. */
+@utility panel {
+  background: var(--color-cream-card);
+  border-radius: var(--radius-brutal);
+}
+
+/* Pressable buttons that "sink" into their offset on active. */
+@utility btn-press {
+  transition:
+    transform 0.06s ease,
+    box-shadow 0.06s ease;
+  &:active {
+    transform: translate(1px, 1px);
+    box-shadow: none;
+  }
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @media (width >= 640px) {
+    max-width: 640px;
+    padding-inline: 2rem;
+  }
+  @media (width >= 768px) {
+    max-width: 768px;
+  }
+  @media (width >= 1024px) {
+    max-width: 1024px;
+    padding-inline: 4rem;
+  }
+  @media (width >= 1280px) {
+    max-width: 1280px;
+    padding-inline: 5rem;
+  }
+  @media (width >= 1408px) {
+    max-width: 1408px;
+    padding-inline: 6rem;
+  }
+}
+
+@utility hero-bg {
+  background:
+    radial-gradient(70% 80% at 50% 0%, var(--color-orange-50) 0%, transparent 60%),
+    linear-gradient(180deg, var(--bg-warm) 0%, #ffffff 100%);
+}
+
+@utility eyebrow {
+  font-family: var(--font-display);
+  font-size: var(--font-size-detail);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--color-blue);
+  display: inline-block;
+}
