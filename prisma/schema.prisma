@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id                    String     @id @default(cuid())
+  username              String     @unique
+  passwordHash          String
+  dailyStudyGoalMinutes Int        @default(60)
+  createdAt             DateTime   @default(now())
+  subjects              Subject[]
+  sessions              Session[]
+  studyDays             StudyDay[]
+}
+
+model StudyDay {
+  id             String   @id @default(cuid())
+  date           DateTime
+  studiedSeconds Int      @default(0)
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([userId, date])
+  @@index([date])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Subject {
+  id        String   @id @default(cuid())
+  name      String
+  color     String   @default("#C8762B")
+  order     Int      @default(0)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topics    Topic[]
+  createdAt DateTime @default(now())
+  isPublic  Boolean  @default(false)
+
+  @@index([userId])
+}
+
+model Topic {
+  id           String        @id @default(cuid())
+  name         String
+  order        Int           @default(0)
+  subjectId    String
+  subject      Subject       @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  agendamentos Agendamento[]
+  createdAt    DateTime      @default(now())
+
+  @@index([subjectId])
+}
+
+model Agendamento {
+  id          String    @id @default(cuid())
+  name        String
+  link        String?
+  date        DateTime?
+  dayOrder    Int?
+  isCompleted Boolean   @default(false)
+  order       Int       @default(0)
+  topicId     String
+  topic       Topic     @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+
+  @@index([topicId])
+  @@index([date, dayOrder])
+}
