@@ -1,0 +1,26 @@
+# Implements various measures to mitigate Supply Chain Attacks. See https://pnpm.io/blog/2025/12/05/newsroom-npm-supply-chain-security
+
+strictDepBuilds: true # Block lifecycle scripts by default (no arbitrary code execution during 'pnpm install' unless explicitly allowed)
+minimumReleaseAge: 20160 # Release Cooldown: the minimum release age for a package to be allowed to be installed (in minutes, 14 days)
+trustPolicy: no-downgrade # Blocks installation when a package version has weaker authentication than previously published versions
+blockExoticSubdeps: true # Prevent installation of exotic subdependencies (e.g., git repositories, local paths, etc.). See: https://pnpm.io/blog/releases/10.26#blockexoticsubdeps
+savePrefix: "" # Remove prefix from versions when installing packages
+
+## Configure build script execution permission. Explicitly allows (true) or disallows (false) script execution per package
+allowBuilds:
+  esbuild: true # Optimizes out the JavaScript shim by the actual native binary for faster builds (https://github.com/evanw/esbuild/issues/4085)
+  sharp: true # High-performance image processing library (libvips bindings in C++) Next.js uses it for built-in <Image> optimization
+  unrs-resolver: false # Contains a workaround for a bug that happens on ancient version of NPM, but this project is not using ancient NPM versions, so... (https://github.com/unrs/unrs-resolver/issues/85)
+  "@swc/core": true # The Rust-based compiler Next.js uses to transpile/minify TypeScript and JS
+  "@parcel/watcher": true # A native C++ Node module for querying and subscribing to filesystem events
+  '@prisma/engines': true # Downloads the Prisma query engine binary used by the ORM
+  prisma: true # Prisma CLI postinstall (engine setup)
+
+# When applying certain hotfixed packages, uncomment this and list them here to exempt them from the minimumReleaseAge control
+# minimumReleaseAgeExclude:
+#  - package-with-critical-hotfix@1.2.3
+
+# When applying certain packages that have migrated their CI/CD to a less secure system, uncomment this and list them here to exempt them from the trustPolicy control
+trustPolicyExclude:
+  - 'eslint-import-resolver-typescript@3.10.1' # To allow eslint-config-next to be installed, I checked the code, no postinstall scripts and code seems safe
+  - 'semver@6.3.1' # To allow eslint-config-next to be installed, I checked the code, no postinstall scripts and code seems safe
