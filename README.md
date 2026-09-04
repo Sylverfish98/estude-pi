@@ -1,117 +1,101 @@
 # Estude!
 
-Gerenciador de cronograma de estudos para estudantes. Reescrita em React/Next.js do projeto Django original (`estude-old`). Interface em português do Brasil.
+Estude! é um website feito para facilitar a gerência de cronogramas de estudos. Alunos podem criar e gerenciar um cronograma de estudos, anexando links para os materiais de escolha.
 
-## Funcionalidades
+## Integrantes do Grupo
+- Fernando Augusto De Araujo Martins
+- Henrique Jorge Oliveira Almeida
+- Gabriel Fonseca Sales
+- João Gabriel Rodrigues De Jesus
+- Guilherme Matheus Bussinger Torres Gonçalves Silveira
 
-- **Matérias e tópicos** — organize o conteúdo em matérias (com cor própria) divididas em tópicos, cada um com seus agendamentos de estudo.
-- **Agendamentos** — cada item de estudo tem nome, link opcional, data opcional, ordem e estado de conclusão; podem ser reordenados por arrastar (`@dnd-kit`) e excluídos segurando o botão.
-- **Cronograma (calendário)** — visualização mensal para organizar os agendamentos por dia, com ajuste de meta diária de estudo.
-- **Início** — mostra as matérias e a agenda dos próximos dias.
-- **Sessão de estudos (Timer)** — modo Pomodoro para estudar os itens do dia e acompanhar o tempo estudado.
-- **Modelos de estudo (templates)** — planos prontos (ex.: um modelo completo para o ENEM) que podem ser importados de uma vez, gerando matérias, tópicos e agendamentos automaticamente.
-- **Autenticação própria** — cadastro/login com usuário e senha (hash com bcrypt) e sessão em cookie httpOnly.
+## Rodando o servidor de produção com Docker (recomendado)
+Pré-requisito: [docker](https://www.docker.com/)
 
-## Stack
+1. Navegue para a pasta raiz do projeto:
+2. Suba o container docker (esse processo pode demorar um pouco):
+```bash
+docker compose -f docker/docker-compose.yml up
+```
+3. Abra o site em: [http://localhost:3000/login](http://localhost:3000/login)
 
-- [Next.js](https://nextjs.org/) (App Router) + React 19 + TypeScript
-- Tailwind CSS v4
-- Prisma 7 + SQLite (via driver adapter `@prisma/adapter-libsql`)
-- Autenticação própria: senha com bcrypt e sessão opaca em cookie httpOnly
-- `@dnd-kit` para reordenação por arrastar
-- Zod para validação de esquemas (ex.: dos modelos de estudo)
-- Vitest para testes
+- **Nota**: Caso seja necessário subir o container com o estado inicial novamente, por favor pare o mesmo e limpe os volumes com o seguinte comando:
+```bash
+docker compose -f ./docker/docker-compose.yml down && docker volume rm -f estude_estude-data && docker compose -f ./docker/docker-compose.yml up --build
+```
 
-## Modelo de dados
+##  Rodando localmente
+Pré-requisito: [pnpm](https://pnpm.io/)
+
+1. Instale as dependências e inicie o servidor de desenvolvimento:
+```bash
+pnpm install && pnpm db:generate && pnpm db:migrate && pnpm dev             
+```
+2. Abra o site em: [http://localhost:3000/login](http://localhost:3000/login)
+
+> **Por que o pnpm?**: pnpm é um package manager de Javascript que permite a escolha de uma data mínima de release para as dependências, diminuindo o risco de supply-chain attacks, comuns nesse ecossistema.
+
+## Sobre a Aplicação
+A plataforma permite a gerência de cronogramas de estudos, personalizados ou seguindo um modelo sugerido. Seguem as principais funcionalidades do projeto:
+
+- **Gerência de matérias**: organize o conteúdo em matérias, divididas em tópicos, cada um com seus agendamentos de estudo. Agendamentos possuem um título e estado de conclusão, sendo opcionais um link para um material de estudo e a data de agendamento;
+- **Tela inicial**: visualize suas matérias e a agenda dos próximos dias;
+- **Cronograma (calendário)**: visualize e organize os itens agendados por dia, com ajuste de meta diária de estudo;
+- **Sessão de estudos (Timer)**: modo Pomodoro para acompanhar o cronograma e gerir o tempo estudado;
+- **Modelos de estudo (templates)**: planos prontos (ex.: um modelo completo para o ENEM) que podem ser importados de uma vez, criando matérias, tópicos e agendamentos automaticamente;
+- **Autenticação própria**: cadastro/login com usuário e senha.
+
+## Stack e Arquitetura
+
+- [Next.js](https://nextjs.org/) (App Router) + React 19 + TypeScript;
+- Tailwind CSS v4;
+- Prisma 7 + SQLite;
+- Autenticação própria: senha com bcrypt e sessão opaca em cookie httpOnly;
+- Zod para validação de esquemas (ex.: dos modelos de estudo);
+- Vitest para testes;
+- `@dnd-kit` para reordenação por arrastar.
+
+### Modelo de dados
 
 ```
 User → Subject (matéria) → Topic (tópico) → Agendamento
          └── StudyDay (tempo estudado por dia)
 ```
 
-- **User**: usuário com meta diária de estudo (`dailyStudyGoalMinutes`).
-- **Subject**: matéria, com cor e ordem, pertence a um usuário.
-- **Topic**: tópico dentro de uma matéria.
-- **Agendamento**: item de estudo dentro de um tópico — nome, link e data opcionais, ordem, ordem do dia (`dayOrder`) e estado de conclusão.
-- **StudyDay**: total de segundos estudados por usuário em um determinado dia.
-- **Session**: sessão de autenticação (token + expiração).
-
-Veja o esquema completo em `prisma/schema.prisma`.
-
-## Rodando localmente
-
-Pré-requisito: [pnpm](https://pnpm.io/).
-
-```bash
-pnpm install
-pnpm db:migrate      # cria prisma/dev.db e aplica as migrations
-pnpm db:seed         # opcional: usuário demo/demo123 com dados de exemplo
-pnpm dev             # http://localhost:3000
-```
-
-Variáveis de ambiente em `.env`:
-
-| Variável         | Descrição                                              |
-| ---------------- | ------------------------------------------------------- |
-| `DATABASE_URL`   | Caminho do arquivo SQLite (ex.: `file:./prisma/dev.db`) |
-| `SESSION_SECRET` | Segredo usado na sessão de autenticação                 |
-
-## Rodando com Docker
-
-O projeto inclui um `Dockerfile` (multi-stage, com Prisma e migrations aplicadas automaticamente no start) e um `docker-compose.yml`:
-
-```bash
-docker compose -f docker/docker-compose.yml up --build
-```
-
-O serviço sobe em `http://localhost:3000`, com o banco SQLite persistido em um volume Docker (`estude-data`).
+- **User**: usuário com meta diária de estudo (`dailyStudyGoalMinutes`);
+- **Subject**: matéria, com cor e ordem, pertence a um usuário;
+- **Topic**: tópico dentro de uma matéria;
+- **Agendamento**: item de estudo dentro de um tópico, contém nome, link e data opcionais, ordem, ordem do dia (`dayOrder`) e estado de conclusão;
+- **StudyDay**: total de segundos estudados por usuário em um determinado dia;
+- **Session**: sessão de autenticação (token + data de expiração).
 
 ## Scripts
 
-| Script              | Descrição                                    |
-| ------------------- | --------------------------------------------- |
-| `pnpm dev`          | Ambiente de desenvolvimento                   |
-| `pnpm build`        | Gera o client do Prisma e builda o Next.js    |
-| `pnpm start`        | Inicia em modo produção                       |
-| `pnpm preview`      | Build + start                                 |
-| `pnpm lint`         | ESLint                                        |
-| `pnpm typecheck`    | Checagem de tipos (`tsc --noEmit`)            |
-| `pnpm format`       | Verifica formatação (Prettier)                |
-| `pnpm format:write` | Aplica formatação                             |
-| `pnpm test`         | Executa os testes (Vitest)                    |
-| `pnpm db:generate`  | Gera o client do Prisma                       |
-| `pnpm db:migrate`   | Aplica migrations em desenvolvimento          |
-| `pnpm db:seed`      | Popula o banco com um usuário e dados demo    |
-| `pnpm db:studio`    | Abre o Prisma Studio                          |
+| Script              | Descrição                                   |
+| ------------------- |---------------------------------------------|
+| `pnpm dev`          | Ambiente de desenvolvimento                 |
+| `pnpm build`        | Gera o cliente do Prisma e builda o Next.js |
+| `pnpm start`        | Inicia em modo produção                     |
+| `pnpm preview`      | Build + start                               |
+| `pnpm lint`         | ESLint                                      |
+| `pnpm typecheck`    | Checagem de tipos (`tsc --noEmit`)          |
+| `pnpm format`       | Verifica formatação (Prettier)              |
+| `pnpm format:write` | Aplica formatação                           |
+| `pnpm test`         | Executa os testes (Vitest)                  |
+| `pnpm db:generate`  | Gera o client do Prisma                     |
+| `pnpm db:migrate`   | Aplica migrations em desenvolvimento        |
+| `pnpm db:seed`      | Popula o banco com um usuário e dados demo  |
+| `pnpm db:studio`    | Abre o Prisma Studio                        |
 
-## Estrutura do projeto
+## Galeria de Imagens
 
-```
-src/
-├── app/                     # Rotas (App Router)
-│   ├── (auth)/              # Login e registro
-│   └── (app)/               # Início, matéria, cronograma, timer, modelos
-├── components/              # Componentes de UI, organizados por domínio
-│   ├── agendamento/
-│   ├── schedule/
-│   ├── subject/
-│   ├── templates/
-│   ├── timer/
-│   └── topic/
-└── lib/
-    ├── actions/             # Server actions (auth, matérias, tópicos, agendamentos, estudo, modelos)
-    ├── templates/           # Catálogo de modelos de estudo (ex.: enem.json) e geração automática de cronograma
-    ├── auth.ts              # Sessão e hashing de senha
-    ├── data.ts              # Consultas de dados
-    ├── dates.ts             # Utilitários de data
-    └── db.ts                # Cliente Prisma
-
-prisma/                      # Schema e migrations
-scripts/seed.mjs             # Script de seed
-docker/                      # Dockerfile e docker-compose
-designs/                     # Mockups das telas (Login, Registro, Início, Matéria, Cronograma, Timer, etc.)
-```
-
-## Telas
-
-Login, Registro, Início (matérias + cronograma do dia), Matéria (tópicos e agendamentos), Cronograma (calendário), Sessão de Estudos (timer Pomodoro) e Modelos de estudo. Concluir, reordenar, seguir link e excluir segurando estão disponíveis nas listas de agendamentos. Mockups de referência em `designs/`.
+### Tela Inicial
+![Home.png](readme/Home.png)
+### Matéria
+![Subjects.png](readme/Subjects.png)
+### Cronograma
+![Schedule.png](readme/Schedule.png)
+### Sessão de Estudos
+![Timer.png](readme/Timer.png)
+### Login
+![Login.png](readme/Login.png)
