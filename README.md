@@ -2,6 +2,8 @@
 
 Estude! é um website feito para facilitar a gerência de cronogramas de estudos. Alunos podem criar e gerenciar um cronograma de estudos, anexando links para os materiais de escolha.
 
+> **Nota: O vídeo de apresentação do projeto se encontra na pasta principal do repositório como 'demo_projeto.mp4'**
+
 ## Integrantes do Grupo
 - Fernando Augusto De Araujo Martins
 - Henrique Jorge Oliveira Almeida
@@ -29,7 +31,7 @@ Pré-requisito: [pnpm](https://pnpm.io/)
 
 1. Instale as dependências e inicie o servidor de desenvolvimento:
 ```bash
-pnpm install && pnpm db:generate && pnpm db:migrate && pnpm dev             
+pnpm install && pnpm db:generate && pnpm db:migrate && pnpm dev
 ```
 2. Abra o site em: [http://localhost:3000/login](http://localhost:3000/login)
 
