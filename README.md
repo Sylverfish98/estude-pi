@@ -2,6 +2,7 @@
 
 Estude! é um website feito para facilitar a gerência de cronogramas de estudos. Alunos podem criar e gerenciar um cronograma de estudos, anexando links para os materiais de escolha.
 
+Link para esse repósitório: https://github.com/Sylverfish98/estude-pi
 > **Nota: O vídeo de apresentação do projeto se encontra na pasta principal do repositório como 'demo_projeto.mp4'**
 
 ## Integrantes do Grupo
